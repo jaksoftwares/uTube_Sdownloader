@@ -301,7 +301,7 @@ document.addEventListener('DOMContentLoaded', function() {
         downloadBtn.disabled = true;
 
         try {
-            const response = await fetch('/api/download-clip/', {
+            const response = await fetch('/api/download-segment/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
