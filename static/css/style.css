@@ -1,0 +1,64 @@
+:root {
+    --primary-color: #00c73c; /* SaveFrom green */
+    --primary-hover: #00a832;
+    --dark-bg: #f8f9fa;
+}
+
+body {
+    background-color: #fcfcfc;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.text-success {
+    color: var(--primary-color) !important;
+}
+
+.btn-success {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-success:hover {
+    background-color: var(--primary-hover);
+    border-color: var(--primary-hover);
+}
+
+.bg-light-gradient {
+    background: linear-gradient(135deg, #fdfdfd 0%, #f0fdf4 100%);
+    border-bottom: 1px solid #eef0f2;
+}
+
+.input-group-text {
+    font-size: 0.85rem;
+    color: #6c757d;
+}
+
+.video-thumbnail-container {
+    background-color: #000;
+    min-height: 200px;
+}
+
+.bg-light-card {
+    background-color: #f8f9fa;
+    transition: transform 0.2s;
+}
+
+.bg-light-card:hover {
+    transform: translateY(-5px);
+}
+
+.animate-bounce {
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+    40% {transform: translateY(-10px);}
+    60% {transform: translateY(-5px);}
+}
+
+#qualitySelect {
+    font-weight: 500;
+}
+
+/* Custom slider aesthetics could go here */
