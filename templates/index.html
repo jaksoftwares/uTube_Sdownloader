@@ -1,0 +1,163 @@
+{% extends 'base.html' %}
+
+{% block title %}YouTube Video Segment Downloader - Free & Fast{% endblock %}
+
+{% block content %}
+<div class="bg-light-gradient hero-section py-5">
+    <div class="container text-center">
+        <h1 class="display-4 fw-bold mb-4">Download Specific <span class="text-success">Video Segments</span></h1>
+        <p class="lead mb-5 text-secondary">Extract and download any part of a YouTube video instantly. No need to download the full video.</p>
+        
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <div class="card shadow-lg border-0 rounded-3 p-2">
+                    <div class="card-body p-2">
+                        <form id="extractForm" class="d-flex gap-2">
+                            <input type="text" id="youtubeUrl" class="form-control form-control-lg border-0 bg-light" placeholder="Paste your YouTube video link here..." required>
+                            <button type="submit" class="btn btn-success btn-lg px-4 fw-bold d-flex align-items-center">
+                                <span class="me-2">Start</span> <i class="fa-solid fa-arrow-right"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                <div id="urlError" class="text-danger mt-2 fw-bold" style="display: none;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container py-5" id="resultsSection" style="display: none;">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <!-- Video Info Card -->
+            <div class="card shadow-sm border-0 mb-4 overflow-hidden">
+                <div class="row g-0">
+                    <div class="col-md-4 position-relative video-thumbnail-container">
+                        <img id="videoThumbnail" src="" class="img-fluid h-100 object-fit-cover" alt="Video Thumbnail">
+                        <div class="position-absolute bottom-0 end-0 bg-dark text-white px-2 py-1 m-2 rounded small opacity-75">
+                            <span id="videoDuration">00:00</span>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title fw-bold" id="videoTitle">Video Title</h5>
+                            <p class="card-text text-muted small"><i class="fa-solid fa-user me-1"></i> <span id="videoUploader">Uploader</span></p>
+                            
+                            <!-- Segment Controls -->
+                            <div class="mt-4">
+                                <label class="fw-bold mb-2 text-uppercase text-secondary small">Select Segment</label>
+                                
+                                <!-- Enhanced Time Input with HH:MM:SS Dropdowns -->
+                                <div class="row g-2 mb-3">
+                                    <div class="col-6">
+                                        <label class="small text-muted fw-bold">Start Time</label>
+                                        <div class="input-group input-group-sm">
+                                            <select id="startHour" class="form-select" style="max-width: 70px;"></select>
+                                            <span class="input-group-text bg-light">:</span>
+                                            <select id="startMin" class="form-select" style="max-width: 70px;"></select>
+                                            <span class="input-group-text bg-light">:</span>
+                                            <select id="startSec" class="form-select" style="max-width: 70px;"></select>
+                                        </div>
+                                        <small class="text-muted">Hours : Minutes : Seconds</small>
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="small text-muted fw-bold">End Time</label>
+                                        <div class="input-group input-group-sm">
+                                            <select id="endHour" class="form-select" style="max-width: 70px;"></select>
+                                            <span class="input-group-text bg-light">:</span>
+                                            <select id="endMin" class="form-select" style="max-width: 70px;"></select>
+                                            <span class="input-group-text bg-light">:</span>
+                                            <select id="endSec" class="form-select" style="max-width: 70px;"></select>
+                                        </div>
+                                        <small class="text-muted">Hours : Minutes : Seconds</small>
+                                    </div>
+                                </div>
+                                
+                                <!-- Hidden fields for actual values -->
+                                <input type="hidden" id="startTime" value="0">
+                                <input type="hidden" id="endTime" value="0">
+                                
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <div>
+                                        <span class="badge bg-secondary" id="segmentPreview">Segment: 0:00 - 0:00</span>
+                                    </div>
+                                    <div>
+                                        <span class="badge bg-info text-dark" id="durationBadge">Duration: 0:00</span>
+                                    </div>
+                                </div>
+                                
+                                <!-- Quality Selection -->
+                                <div class="mb-3">
+                                    <label class="fw-bold mb-2 text-uppercase text-secondary small">Quality</label>
+                                    <select id="qualitySelect" class="form-select">
+                                        <!-- Options populated via JS -->
+                                    </select>
+                                </div>
+
+                                <div class="d-grid">
+                                    <button id="downloadBtn" class="btn btn-primary btn-lg fw-bold video-action-btn">
+                                        <i class="fa-solid fa-download me-2"></i> Download Segment
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Progress Section -->
+            <div id="progressSection" class="card shadow-sm border-0 mb-4 p-4" style="display: none;">
+                <h5 class="fw-bold mb-3"><i class="fa-solid fa-spinner fa-spin me-2 text-primary"></i> Processing...</h5>
+                <div class="progress" style="height: 25px;">
+                    <div id="progressBar" class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" style="width: 0%">0%</div>
+                </div>
+                <p id="progressStatus" class="text-center text-muted mt-2 small">Initializing download task...</p>
+                <div id="downloadLinkContainer" class="text-center mt-3" style="display: none;">
+                    <a id="finalDownloadLink" href="#" class="btn btn-success btn-lg shadow-sm animate-bounce" target="_blank">
+                        <i class="fa-solid fa-file-arrow-down me-2"></i> Save File
+                    </a>
+                </div>
+                <div id="errorContainer" class="alert alert-danger mt-3" style="display: none;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Features Section -->
+<div id="how-it-works" class="bg-white py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold">How It Works</h2>
+        </div>
+        <div class="row g-4 text-center">
+            <div class="col-md-4">
+                <div class="p-4 rounded-3 h-100 bg-light-card">
+                    <div class="icon-box mb-3 text-success">
+                        <i class="fa-brands fa-youtube fa-3x"></i>
+                    </div>
+                    <h4>1. Paste URL</h4>
+                    <p class="text-muted">Copy the video link from YouTube and paste it into the search box above.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="p-4 rounded-3 h-100 bg-light-card">
+                    <div class="icon-box mb-3 text-success">
+                        <i class="fa-solid fa-scissors fa-3x"></i>
+                    </div>
+                    <h4>2. Select Segment</h4>
+                    <p class="text-muted">Choose the start and end time of the part you want to keep.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="p-4 rounded-3 h-100 bg-light-card">
+                    <div class="icon-box mb-3 text-success">
+                        <i class="fa-solid fa-cloud-arrow-down fa-3x"></i>
+                    </div>
+                    <h4>3. Download</h4>
+                    <p class="text-muted">Select quality and download your custom clip instantly.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
