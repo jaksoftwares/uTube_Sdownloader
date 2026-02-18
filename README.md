@@ -1,4 +1,7 @@
 # YouTube Segment Downloader
+```markdown
+![Landing Page Screenshot](static/img/screenshot.png)
+```
 
 A Django-based backend service that allows users to download specific segments of YouTube videos.Features include video info extraction, time-range based segment downloading, background processing with Celery, and comprehensive API endpoints.
 
